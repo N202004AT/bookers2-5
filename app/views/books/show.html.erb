@@ -1,0 +1,57 @@
+
+<%= render 'users/u', user: @user, book: @book %>
+<%= flash[:success] %>
+
+<div class="col-xs-9">
+<h1>Book detail</h1>
+<table class="table">
+<tbody>
+	<tr>
+		<td>
+			<%= attachment_image_tag @user, :profile_image, :fill, 60, 60, format: 'jpeg', fallback:"no_image2.jpg" %><br>
+			<%= link_to @user.name, user_path(@user.id) %>
+		</td>
+		<td><%= link_to @booked.title, book_path(@booked.id) %></td>
+		<td><%= @booked.body %></td>
+		<td>
+			<% if @booked.favorited_by?(current_user) %>
+			  <%= link_to book_favorites_path(@booked),method: :delete do %>
+			    <%= fa_icon "fa fa-heart" %>
+			    <%= @booked.favorites.count %>
+			  <% end %>
+			<% else %>
+			  <%= link_to book_favorites_path(@booked), method: :post do %>
+			    <%= fa_icon "fa fa-heart" %>
+			    <%= @booked.favorites.count %>
+			  <% end %>
+			<% end %>
+		</td>
+		<td>コメント数:<%= @booked.book_comments.count %></td>
+		<% if @user == current_user %>
+		<td><%= link_to "Edit", edit_book_path(@booked.id), class:"btn-sm btn-success" %></td>
+		<td><%= link_to "Destroy", book_path(@booked.id), class:"btn-sm btn-danger",method: :delete, data:{confirm: '本当に消しますか？'}%></td>
+		<% end %>
+	</tr>
+</tbody>
+</table>
+
+
+<%= form_for [@booked, @book_comment] do |f| %>
+    <div class="row">
+        <div class="col-sm-12">
+            <%= f.text_area :comment, rows:'5', class: "form-control" %>
+        </div>
+    </div>
+    <%= f.submit "送信", class: "btn btn-lg btn-base-1 mt-20 pull-right" %>
+<% end %>
+<div class="col-sm-12">
+<% @book_comments.each do |book_comment| %>
+  <%= book_comment.user.name %>
+  <%= book_comment.created_at.strftime('%Y/%m/%d') %>
+  <%= book_comment.comment %>
+<% if book_comment.user_id == current_user.id %>
+<%= link_to "削除", book_book_comments_path(book_comment), method: :delete, data: {confirm:'削除してもよろしいですか？'} %>
+<% end %>
+<% end %>
+</div>
+</div>
