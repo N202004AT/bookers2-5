@@ -15,7 +15,7 @@ class BookCommentsController < ApplicationController
 		@book = @book_comment.book
 		if @book_comment.destroy
 			#「.」リレーション、結びついた物を取り出す為に使う。
-		   redirect_to book_path(@book.id)
+		   redirect_to request.referer
 		end
 	end
 
