@@ -1,0 +1,45 @@
+
+<div class="row">
+<%#= render 'users/u', user: current_user, book: @book %>
+
+<div class="col-xs-9">
+<h2>Follow Users</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>image</th>
+      <th>name</th>
+      <th colspan="3"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @followings.each do |following| %>
+    <tr>
+    <td><%= attachment_image_tag following, :profile_image, :fill, 50, 50, format: 'jpeg',fallback:"no_image2.jpg" %></td>
+      <td><%= following.name %></td>
+      <!-- ユーザモデルでhas_many followingsとしている為この書き方可能 -->
+      <td>フォロー数:<%= following.followings.count %></td>
+      <!-- フォロワー数:<%#= Relationship.where(user_id: user.id).count %>と一緒 -->
+      <td>フォロワー数:<%= following.followers.count %></td>
+      <td>
+          <% unless current_user == following %>
+            <% if current_user.following?(following) %>
+              <%= form_for(current_user.relationships.find_by(follow_id: following.id), html: { method: :delete }) do |f| %>
+      　　　     <%= hidden_field_tag :follow_id, following.id %>
+                <%= f.submit 'フォロー外す' %>
+              <% end %>
+            <% else %>
+              <%= form_for(current_user.relationships.build) do |f| %>
+                <%= hidden_field_tag :follow_id, following.id %>
+                <%= f.submit 'フォローする' %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= link_to "Show",user_path(following.id) %></td>
+    </tr>
+      <% end %>
+    </tbody>
+</table>
+</div>
+</div>
