@@ -10,6 +10,14 @@
           <li><%= link_to "Users", users_path, class:"glyphicon glyphicon-user users" %></li>
           <li><%= link_to "Books", books_path, class:"glyphicon glyphicon-book books" %></li>
           <li><%= link_to "logout", destroy_user_session_path,method: :delete, class:"glyphicon glyphicon-log-out logout" %></li>
+       <div class="search_nav">
+          <%= form_tag(search_path , method: :get) do %>
+          <%= text_field(@search_content, :search_word)%>
+          <%= select(@search_content, :book_or_user, [["Book","book"], ["User","user"]])%>
+              <%= select(@search_content, :search_method, [["前方一致","forward_match"], ["後方一致","backward_match"], ["完全一致","perfect_match"], ["部分一致","partial_match"]])%>
+              <%= submit_tag "検索" %>
+      　　<% end %>
+       </div>
         <% else %>
         <li><%= link_to "Home", "/", class:"glyphicon glyphicon-home home" %></li>
           <li><%= link_to "About", home_about_path,class:"glyphicon glyphicon-link about" %></li>
